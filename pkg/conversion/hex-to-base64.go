@@ -67,6 +67,7 @@ var idxToCharBase64Table = map[uint8]uint8{
 	63: 47,
 }
 
+// HexToBase64 converts byte slice to base64 slice of bytes, represented as ascii values
 func HexToBase64(input []byte) []byte {
 	totalBits := make([]uint8, len(input)*8)
 	for i, b := range input {

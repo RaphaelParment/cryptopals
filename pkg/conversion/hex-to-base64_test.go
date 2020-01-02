@@ -2,7 +2,6 @@ package conversion
 
 import (
 	"encoding/hex"
-	"fmt"
 	"testing"
 )
 
@@ -24,7 +23,6 @@ func TestHexToBase64(t *testing.T) {
 
 	for _, test := range tt {
 		in, _ := hex.DecodeString(test.input)
-		fmt.Println(string(HexToBase64(in)))
 		out := string(HexToBase64(in))
 		if out != test.output {
 			t.Fatalf("failed to convert input for '%s'. Got: '%s', expected: '%s'", test.name, out, test.output)
