@@ -2,11 +2,14 @@ package main
 
 import (
 	"bufio"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	c "raphael.parment/cryptopals/pkg/conversion"
+	d "raphael.parment/cryptopals/pkg/decryption"
 )
 
 func main() {
@@ -17,6 +20,11 @@ func main() {
 	// if err := challenge4(); err != nil {
 	// 	fmt.Println("challenge 4 FAILED")
 	// }
+
+	if err := challenge6(); err != nil {
+		fmt.Println("challenge 6 FAILED")
+	}
+
 }
 
 func challenge3() error {
@@ -75,6 +83,26 @@ func challenge4() error {
 	for i := range msgIn {
 		fmt.Printf("%s", string(c.Xor(msgIn[i], msgKey)))
 	}
+
+	return nil
+}
+
+func challenge6() error {
+	in, err := ioutil.ReadFile("./inputs/6.txt")
+	if err != nil {
+		return fmt.Errorf("failed to read input '%s'", err.Error())
+	}
+
+	data, err := base64.StdEncoding.DecodeString(string(in))
+	if err != nil {
+		return fmt.Errorf("failed to decode from base64 '%s'", err.Error())
+	}
+
+	keysize := d.FindKeySize(data, 40)
+	transposed := d.PrepareInput(data, keysize)
+	output := d.Solve(data, transposed, keysize)
+
+	fmt.Println(string(output))
 
 	return nil
 }
