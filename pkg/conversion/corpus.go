@@ -1,7 +1,7 @@
 package conversion
 
-// values according to https://www.sttmedia.com/characterfrequency-english
-var characterFrequencies = map[byte]float32{
+// CorpusEN according to https://www.sttmedia.com/characterfrequency-english
+var CorpusEN = map[byte]float32{
 	65:  8.34,
 	66:  1.54,
 	67:  2.73,
@@ -57,19 +57,19 @@ var characterFrequencies = map[byte]float32{
 	32:  10.00, // Adding heavy weight on space character
 }
 
-// FindKeyScore checks the letter frequency scores of the input xored
-// against each character from A to Z. The character giving the
-// largest score is returned, along with the according score.
-func FindKeyScore(input []byte) (byte, float32) {
+// FindSingleXorKey checks the score of a given text when xored with each
+// ascii char from 0 to 127. It returns the maxScore of the text and the
+// corresponding key.
+func FindSingleXorKey(text []byte) (float32, byte) {
 	var (
-		key, v, char    byte
+		char, key       byte
 		score, maxScore float32
 	)
 
 	for char = 0; char < 128; char++ {
-		for i := 0; i < len(input); i++ {
-			v = Xor(input[i], char)
-			score += characterFrequencies[v]
+		for i := 0; i < len(text); i++ {
+			v := text[i] ^ char
+			score += CorpusEN[v]
 		}
 		if score > maxScore {
 			maxScore = score
@@ -78,5 +78,5 @@ func FindKeyScore(input []byte) (byte, float32) {
 		score = 0
 	}
 
-	return key, maxScore
+	return maxScore, key
 }

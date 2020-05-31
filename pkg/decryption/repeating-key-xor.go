@@ -1,8 +1,9 @@
 package decryption
 
 import (
+	"raphael.parment/cryptopals/pkg/conversion"
 	c "raphael.parment/cryptopals/pkg/conversion"
-	e "raphael.parment/cryptopals/pkg/encryption"
+	"raphael.parment/cryptopals/pkg/encryption"
 )
 
 // HammingDistance func
@@ -90,12 +91,10 @@ func PrepareInput(input []byte, keysize int) [][]byte {
 
 // Solve func
 func Solve(input []byte, transposed [][]byte, keysize int) []byte {
-
 	var repeatedKey []byte
 	for i := 0; i < keysize; i++ {
-
-		key, _ := c.FindKeyScore(transposed[i])
+		_, key := conversion.FindSingleXorKey(transposed[i])
 		repeatedKey = append(repeatedKey, key)
 	}
-	return e.RepeatingKeyXor(input, repeatedKey)
+	return encryption.RepeatingKeyXor(input, repeatedKey)
 }
